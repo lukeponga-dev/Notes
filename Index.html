@@ -1,61 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Study Notes</title>
+    <title>Note Taking Website</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+            padding: 20px;
             background-color: #f0f0f0;
         }
-        .container {
-            width: 80%;
-            margin: 0 auto;
-            padding: 20px;
+        #noteInput {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
         }
         .note {
-            padding: 20px;
             background-color: #fff;
             border: 1px solid #ddd;
-            margin-bottom: 20px;
-        }
-        #searchInput {
-            width: 100%;
             padding: 10px;
-            box-sizing: border-box;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .delete {
+            color: red;
+            float: right;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>My Study Notes</h1>
-        <input type="text" id="searchInput" onkeyup="searchNotes()" placeholder="Search for notes..">
-        <div class="note">
-            <h2>Computer Organization and Digital Logic Notes</h2>
-            <p>Structure: the way components are interconnected</p>
-            <p>Function: the operations of individual components</p>
-            <!-- Add more notes here -->
-        </div>
-        <!-- Add more note divs for each set of notes -->
-    </div>
+    <h1>My Notes</h1>
+    <textarea id="noteInput"></textarea>
+    <button onclick="addNote()">Add Note</button>
+    <div id="notes"></div>
 
     <script>
-        function searchNotes() {
-            var input, filter, notes, note, a, i, txtValue;
-            input = document.getElementById('searchInput');
-            filter = input.value.toUpperCase();
-            notes = document.getElementsByClassName('note');
-            for (i = 0; i < notes.length; i++) {
-                note = notes[i];
-                txtValue = note.textContent || note.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    notes[i].style.display = "";
-                } else {
-                    notes[i].style.display = "none";
-                }
-            }
+        var notes = [];
+
+        function addNote() {
+            var noteInput = document.getElementById('noteInput');
+            var note = noteInput.value;
+            notes.push(note);
+            noteInput.value = '';
+            displayNotes();
+        }
+
+        function deleteNote(index) {
+            notes.splice(index, 1);
+            displayNotes();
+        }
+
+        function displayNotes() {
+            var notesHtml = notes.map(function(note, index) {
+                return '<div class="note"><span class="delete" onclick="deleteNote(' + index + ')">x</span>' + note + '</div>';
+            }).join('');
+            document.getElementById('notes').innerHTML = notesHtml;
         }
     </script>
 </body>
