@@ -37,6 +37,13 @@
             background-color: #fff;
             border: 1px solid #ddd;
             margin-top: 20px;
+            position: relative;
+        }
+        .delete {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -46,7 +53,6 @@
         <textarea id="notes"></textarea>
         <div>
             <button onclick="saveNote()">Save Note</button>
-            <button onclick="deleteAllNotes()">Delete All Notes</button>
         </div>
         <div id="savedNotes"></div>
     </div>
@@ -60,8 +66,10 @@
             displayNotes();
         }
 
-        function deleteAllNotes() {
-            localStorage.removeItem('notes');
+        function deleteNote(index) {
+            var savedNotes = JSON.parse(localStorage.getItem('notes')) || [];
+            savedNotes.splice(index, 1);
+            localStorage.setItem('notes', JSON.stringify(savedNotes));
             displayNotes();
         }
 
@@ -73,6 +81,11 @@
                 var noteDiv = document.createElement('div');
                 noteDiv.className = 'note';
                 noteDiv.innerText = savedNotes[i];
+                var deleteButton = document.createElement('span');
+                deleteButton.className = 'delete';
+                deleteButton.innerText = 'X';
+                deleteButton.onclick = function() { deleteNote(i); };
+                noteDiv.appendChild(deleteButton);
                 savedNotesDiv.appendChild(noteDiv);
             }
         }
