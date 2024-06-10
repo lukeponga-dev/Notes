@@ -116,19 +116,19 @@
             displayNotes();
         }
 
-        function displayNotes(notesArray = JSON.parse(localStorage.getItem('notes')) || []) {
-            var notesContainer = document.getElementById('notesContainer');
-            notesContainer.innerHTML = ''; // Clear existing notes
+      function displayNotes() {
+    var notesArray = JSON.parse(localStorage.getItem('notes')) || [];
+    var notesContainer = document.getElementById('notesContainer');
+    notesContainer.innerHTML = ''; // Clear existing notes
 
-            // Display notes
-            notesArray.forEach(function(noteText) {
-                var noteDiv = document.createElement('div');
-                noteDiv.classList.add('note');
-                noteDiv.innerHTML = formatNote(noteText) +
-                                    '<span class="delete-btn" onclick="removeNote(this)">Delete</span>';
-                notesContainer.appendChild(noteDiv);
-            });
-        }
+    notesArray.forEach(function(noteText, index) {
+        var noteDiv = document.createElement('div');
+        noteDiv.classList.add('note');
+        noteDiv.innerHTML = formatNote(noteText) +
+                            '<span class="delete-btn" onclick="removeNote(' + index + ')">Delete</span>';
+        notesContainer.appendChild(noteDiv);
+    });
+}
 
         function formatNote(noteText) {
             // Format note text here
