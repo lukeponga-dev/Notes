@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Study Notes</title>
+    <title>My Study Notes</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,84 +14,49 @@
             margin: 0 auto;
             padding: 20px;
         }
-        #notes {
-            width: 100%;
-            height: 200px;
-            padding: 10px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-        }
-        button {
-            padding: 10px 20px;
-            margin-right: 10px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
         .note {
             padding: 20px;
             background-color: #fff;
             border: 1px solid #ddd;
-            margin-top: 20px;
-            position: relative;
+            margin-bottom: 20px;
         }
-        .delete {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
+        #searchInput {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>My Study Notes</h1>
-        <textarea id="notes"></textarea>
-        <div>
-            <button onclick="saveNote()">Save Note</button>
+        <input type="text" id="searchInput" onkeyup="searchNotes()" placeholder="Search for notes..">
+        <div class="note">
+            <h2>Computer Organization and Digital Logic Notes</h2>
+            <p>Structure: the way components are interconnected</p>
+            <p>Function: the operations of individual components</p>
+            <!-- Add more notes here -->
         </div>
-        <div id="savedNotes"></div>
+        <!-- Add more note divs for each set of notes -->
     </div>
 
     <script>
-        function saveNote() {
-            var notes = document.getElementById('notes').value;
-            var savedNotes = JSON.parse(localStorage.getItem('notes')) || [];
-            savedNotes.push(notes);
-            localStorage.setItem('notes', JSON.stringify(savedNotes));
-            displayNotes();
-        }
-
-        function deleteNote(index) {
-            var savedNotes = JSON.parse(localStorage.getItem('notes')) || [];
-            savedNotes.splice(index, 1);
-            localStorage.setItem('notes', JSON.stringify(savedNotes));
-            displayNotes();
-        }
-
-        function displayNotes() {
-            var savedNotes = JSON.parse(localStorage.getItem('notes')) || [];
-            var savedNotesDiv = document.getElementById('savedNotes');
-            savedNotesDiv.innerHTML = '';
-            for (var i = 0; i < savedNotes.length; i++) {
-                var noteDiv = document.createElement('div');
-                noteDiv.className = 'note';
-                noteDiv.innerText = savedNotes[i];
-                var deleteButton = document.createElement('span');
-                deleteButton.className = 'delete';
-                deleteButton.innerText = 'X';
-                deleteButton.onclick = function() { deleteNote(i); };
-                noteDiv.appendChild(deleteButton);
-                savedNotesDiv.appendChild(noteDiv);
+        function searchNotes() {
+            var input, filter, notes, note, a, i, txtValue;
+            input = document.getElementById('searchInput');
+            filter = input.value.toUpperCase();
+            notes = document.getElementsByClassName('note');
+            for (i = 0; i < notes.length; i++) {
+                note = notes[i];
+                txtValue = note.textContent || note.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    notes[i].style.display = "";
+                } else {
+                    notes[i].style.display = "none";
+                }
             }
         }
-
-        // Display the notes when the page loads
-        displayNotes();
     </script>
 </body>
 </html>
