@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Study Notes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .note {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .note h2 {
+            color: #007BFF;
+        }
+        .note p {
+            margin-bottom: 10px;
+        }
+        .note:last-child {
+            margin-bottom: 0;
+        }
+        #searchInput {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Study Notes</h1>
+        <input type="text" id="searchInput" onkeyup="searchNotes()" placeholder="Search for notes..">
+        <div class="note">
+            <h2>Title of Note</h2>
+            <p>Point 1</p>
+            <p>Point 2</p>
+            <p>Point 3</p>
+        </div>
+        <!-- Add more note divs for each set of notes -->
+    </div>
+
+    <script>
+        function searchNotes() {
+            var input, filter, notes, note, a, i, txtValue;
+            input = document.getElementById('searchInput');
+            filter = input.value.toUpperCase();
+            notes = document.getElementsByClassName('note');
+            for (i = 0; i < notes.length; i++) {
+                note = notes[i];
+                txtValue = note.textContent || note.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    notes[i].style.display = "";
+                } else {
+                    notes[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
