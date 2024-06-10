@@ -13,12 +13,18 @@
     <h1>My Study Notes</h1>
     <textarea id="notes"></textarea>
     <button onclick="saveNote()">Save Note</button>
+    <button onclick="deleteNote()">Delete Note</button>
     <div id="savedNotes"></div>
 
     <script>
         function saveNote() {
             var notes = document.getElementById('notes').value;
             localStorage.setItem('notes', notes);
+            displayNote();
+        }
+
+        function deleteNote() {
+            localStorage.removeItem('notes');
             displayNote();
         }
 
