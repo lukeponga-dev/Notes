@@ -62,10 +62,44 @@
             var noteText = document.getElementById('noteInput').value;
             if (noteText.trim() === '') return; // Prevent adding empty notes
         
-            var notesContainer = document.getElementById('notesContainer');
-            var noteDiv = document.createElement('div');
-            noteDiv.classList.add('note');
+            // Save the note to localStorage
+            var notesArray = JSON.parse(localStorage.getItem('notes')) || [];
+            notesArray.push(noteText);
+            localStorage.setItem('notes', JSON.stringify(notesArray));
         
+            // Clear the input after adding
+            document.getElementById('noteInput').value = '';
+            displayNotes();
+        }
+        
+        function removeNote(element) {
+            // Find the index of the note to be removed
+            var notesContainer = document.getElementById('notesContainer');
+            var notesArray = JSON.parse(localStorage.getItem('notes'));
+            var index = Array.prototype.indexOf.call(notesContainer.children, element.parentElement);
+        
+            // Remove the note from localStorage and update the display
+            notesArray.splice(index, 1);
+            localStorage.setItem('notes', JSON.stringify(notesArray));
+            displayNotes();
+        }
+        
+        function displayNotes() {
+            var notesContainer = document.getElementById('notesContainer');
+            notesContainer.innerHTML = ''; // Clear existing notes
+        
+            // Retrieve notes from localStorage and display them
+            var notesArray = JSON.parse(localStorage.getItem('notes')) || [];
+            notesArray.forEach(function(noteText) {
+                var noteDiv = document.createElement('div');
+                noteDiv.classList.add('note');
+                noteDiv.innerHTML = formatNote(noteText) +
+                                    '<span class="delete-btn" onclick="removeNote(this)">Delete</span>';
+                notesContainer.appendChild(noteDiv);
+            });
+        }
+        
+        function formatNote(noteText) {
             // Split the note into lines
             var lines = noteText.split('\n');
             var formattedLines = lines.map(function(line) {
@@ -95,18 +129,21 @@
         
             // Wrap list items in <ul> if they exist
             if (formattedLines.includes('<li>')) {
-                formattedLines = formattedLines.replace(/(<li>.*?<\/li>)/g, '<ul>$1</ul>');
+                formattedLines = '<ul>' + formattedLines + '</ul>';
             }
-        
-            noteDiv.innerHTML = formattedLines +
-                                '<span class="delete-btn" onclick="removeNote(this)">Delete</span>';
-            notesContainer.appendChild(noteDiv);
-            document.getElementById('noteInput').value = ''; // Clear the input after adding
+            // make text bald if user types **
+            if (formattedLines.includes('**')) {
+                formattedLines = formattedLines.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            }
+            //make list if user types - 
+            if (formattedLines.includes('-')) {
+                formattedLines = formattedLines.replace(/-(.*)/g, '<li>$1</li>');
+            }
+            return formattedLines;
         }
         
-        function removeNote(element) {
-            element.parentElement.remove();
-        }
+        // Call displayNotes when the page loads to show existing notes
+        document.addEventListener('DOMContentLoaded', displayNotes);
         
     </script>
 </body>
