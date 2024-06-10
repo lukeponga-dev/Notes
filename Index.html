@@ -7,31 +7,46 @@
     <style>
         /* Your CSS styles */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Open Sans', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f4f4f4;
+            padding: 20px;
         }
-
+        
+        h1, h2, h3 {
+            font-weight: 600;
+        }
+        
         h1 {
-            text-align: center;
+            font-size: 2.5em;
         }
-
+        
+        h2 {
+            font-size: 2em;
+        }
+        
+        h3 {
+            font-size: 1.5em;
+        }
+        
         .note {
-            background: #f9f9f9;
-            border: 1px solid #ccc;
-            margin-bottom: 10px;
-            padding: 15px;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background: #fff;
+            border-left: 5px solid #5cb85c;
+            margin-bottom: 15px;
+            padding: 20px;
+            border-radius: 0;
+            box-shadow: none;
         }
-
+        
         .note ul {
-            padding-left: 20px;
-            margin-top: 5px;
+            padding-left: 40px;
         }
-
+        
         .note li {
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
-
+        
         .delete-btn {
             color: #e74c3c;
             cursor: pointer;
@@ -71,18 +86,16 @@
         function addNote() {
             var noteText = document.getElementById('noteInput').value;
             if (noteText.trim() === '') return; // Prevent adding empty notes
-            document.getElementById('noteInput').value = ''; // Clear the input after adding
-          // Save the note to localStorage
-          var notesArray = JSON.parse(localStorage.getItem('notes')) || [];
-          notesArray.push(noteText);
-          localStorage.setItem('notes', JSON.stringify(notesArray));
+            // Save the note to localStorage
+            var notesArray = JSON.parse(localStorage.getItem('notes')) || [];
+            notesArray.push(noteText);
+            localStorage.setItem('notes', JSON.stringify(notesArray));
 
-          // Clear the input after adding
-          document.getElementById('noteInput').value = '';
-          displayNotes();
-      }
-       
-       
+            // Clear the input after adding
+            document.getElementById('noteInput').value = '';
+            displayNotes();
+        }
+
         function removeNote(element) {
             // Find the index of the note to be removed
             var notesContainer = document.getElementById('notesContainer');
@@ -95,27 +108,24 @@
             displayNotes();
         }
 
-          
-         function displayNotes() {
-              var notesContainer = document.getElementById('notesContainer');
-              notesContainer.innerHTML = ''; // Clear existing notes
-          
-              // Retrieve notes from localStorage and display them
-              var notesArray = JSON.parse(localStorage.getItem('notes')) || [];
-              notesArray.forEach(function(noteText) {
-                  var noteDiv = document.createElement('div');
-                  noteDiv.classList.add('note');
-                  noteDiv.innerHTML = formatNote(noteText) +
-                                      '<span class="delete-btn" onclick="removeNote(this)">Delete</span>';
-                  notesContainer.appendChild(noteDiv);
-              });
-          }
+        function displayNotes(notesArray = JSON.parse(localStorage.getItem('notes')) || []) {
+            var notesContainer = document.getElementById('notesContainer');
+            notesContainer.innerHTML = ''; // Clear existing notes
+
+            // Display notes
+            notesArray.forEach(function(noteText) {
+                var noteDiv = document.createElement('div');
+                noteDiv.classList.add('note');
+                noteDiv.innerHTML = formatNote(noteText) +
+                                    '<span class="delete-btn" onclick="removeNote(this)">Delete</span>';
+                notesContainer.appendChild(noteDiv);
+            });
+        }
 
         function formatNote(noteText) {
-            // Split the note into lines
+            // Format note text here
             var lines = noteText.split('\n');
             var formattedLines = lines.map(function (line) {
-                // Determine the formatting based on the line prefix
                 if (line.startsWith('###')) {
                     return '<h3>' + line.substring(3).trim() + '</h3>';
                 } else if (line.startsWith('##')) {
@@ -124,37 +134,31 @@
                     return '<h1>' + line.substring(1).trim() + '</h1>';
                 } else if (line.startsWith('-')) {
                     return '<li>' + line.substring(1).trim() + '</li>'; // List item
-                } else if (line.includes(',')) { // Check if the line is a table row
+                } else if (line.includes(',')) {
                     var cells = line.split(',').map(function (cell) {
-                        return '<td>' + cell.trim() + '</td>'; // Create table cells
+                        return '<td>' + cell.trim() + '</td>';
                     }).join('');
-                    return '<tr>' + cells + '</tr>'; // Create a table row
+                    return '<tr>' + cells + '</tr>';
                 } else {
                     return '<p>' + line + '</p>'; // Paragraph
                 }
             }).join('');
 
-            // Wrap table rows in <table> if they exist
             if (formattedLines.includes('<tr>')) {
                 formattedLines = '<table>' + formattedLines + '</table>';
             }
 
-            // Wrap list items in <ul> if they exist
             if (formattedLines.includes('<li>')) {
                 formattedLines = '<ul>' + formattedLines + '</ul>';
             }
-            // make text bald if user types **
+
             if (formattedLines.includes('**')) {
                 formattedLines = formattedLines.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
             }
-            //make list if user types - 
-            if (formattedLines.includes('-')) {
-                formattedLines = formattedLines.replace(/-(.*)/g, '<li>$1</li>');
-            }
+
             return formattedLines;
         }
 
-        // Call displayNotes when the page loads to show existing notes
         document.addEventListener('DOMContentLoaded', displayNotes);
 
     </script>
