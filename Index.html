@@ -115,7 +115,9 @@
             localStorage.setItem('notes', JSON.stringify(notesArray));
             displayNotes();
         }
-
+document.addEventListener('DOMContentLoaded', function() {
+    displayNotes();
+});
       function displayNotes() {
     var notesArray = JSON.parse(localStorage.getItem('notes')) || [];
     var notesContainer = document.getElementById('notesContainer');
