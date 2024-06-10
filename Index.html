@@ -71,25 +71,18 @@
         function addNote() {
             var noteText = document.getElementById('noteInput').value;
             if (noteText.trim() === '') return; // Prevent adding empty notes
-
-            fetch('/notes', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ content: noteText }),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Success:', data);
-                    displayNotes(); // Refresh the notes display
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-
             document.getElementById('noteInput').value = ''; // Clear the input after adding
-        }
+          // Save the note to localStorage
+          var notesArray = JSON.parse(localStorage.getItem('notes')) || [];
+          notesArray.push(noteText);
+          localStorage.setItem('notes', JSON.stringify(notesArray));
+
+          // Clear the input after adding
+          document.getElementById('noteInput').value = '';
+          displayNotes();
+      }
+       
+       
         function removeNote(element) {
             // Find the index of the note to be removed
             var notesContainer = document.getElementById('notesContainer');
@@ -117,11 +110,7 @@
                   notesContainer.appendChild(noteDiv);
               });
           }
-   
 
-
-        // Call displayNotes when the page loads to show existing notes
-        document.addEventListener('DOMContentLoaded', displayNotes);
         function formatNote(noteText) {
             // Split the note into lines
             var lines = noteText.split('\n');
