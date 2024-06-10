@@ -32,7 +32,7 @@
         button:hover {
             background-color: #0056b3;
         }
-        #savedNotes {
+        .note {
             padding: 20px;
             background-color: #fff;
             border: 1px solid #ddd;
@@ -46,7 +46,7 @@
         <textarea id="notes"></textarea>
         <div>
             <button onclick="saveNote()">Save Note</button>
-            <button onclick="deleteNote()">Delete Note</button>
+            <button onclick="deleteAllNotes()">Delete All Notes</button>
         </div>
         <div id="savedNotes"></div>
     </div>
@@ -54,22 +54,31 @@
     <script>
         function saveNote() {
             var notes = document.getElementById('notes').value;
-            localStorage.setItem('notes', notes);
-            displayNote();
+            var savedNotes = JSON.parse(localStorage.getItem('notes')) || [];
+            savedNotes.push(notes);
+            localStorage.setItem('notes', JSON.stringify(savedNotes));
+            displayNotes();
         }
 
-        function deleteNote() {
+        function deleteAllNotes() {
             localStorage.removeItem('notes');
-            displayNote();
+            displayNotes();
         }
 
-        function displayNote() {
-            var savedNotes = localStorage.getItem('notes');
-            document.getElementById('savedNotes').innerText = savedNotes;
+        function displayNotes() {
+            var savedNotes = JSON.parse(localStorage.getItem('notes')) || [];
+            var savedNotesDiv = document.getElementById('savedNotes');
+            savedNotesDiv.innerHTML = '';
+            for (var i = 0; i < savedNotes.length; i++) {
+                var noteDiv = document.createElement('div');
+                noteDiv.className = 'note';
+                noteDiv.innerText = savedNotes[i];
+                savedNotesDiv.appendChild(noteDiv);
+            }
         }
 
-        // Display the note when the page loads
-        displayNote();
+        // Display the notes when the page loads
+        displayNotes();
     </script>
 </body>
 </html>
