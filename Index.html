@@ -83,6 +83,14 @@
     <div id="notesContainer"></div>
 
     <script>
+        // Get references to DOM elements
+        const noteInput = document.getElementById('noteInput');
+        const notesContainer = document.getElementById('notesContainer');
+
+        // Event listeners
+        document.getElementById('addNoteBtn').addEventListener('click', addNote);
+        document.getElementById('searchBtn').addEventListener('click', searchNotes);
+        document.addEventListener('DOMContentLoaded', displayNotes);
         function addNote() {
             var noteText = document.getElementById('noteInput').value;
             if (noteText.trim() === '') return; // Prevent adding empty notes
