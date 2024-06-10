@@ -21,33 +21,50 @@
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 4px;
+            position: relative;
         }
         .delete {
             color: red;
-            float: right;
+            position: absolute;
+            right: 10px;
+            top: 10px;
             cursor: pointer;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <h1>My Notes</h1>
-    <textarea id="noteInput"></textarea>
+    <textarea id="noteInput" placeholder="Type your note here..."></textarea>
     <button onclick="addNote()">Add Note</button>
     <div id="notes"></div>
 
     <script>
-        var notes = [];
+        var notes = JSON.parse(localStorage.getItem('notes')) || [];
 
         function addNote() {
             var noteInput = document.getElementById('noteInput');
             var note = noteInput.value;
             notes.push(note);
             noteInput.value = '';
+            localStorage.setItem('notes', JSON.stringify(notes));
             displayNotes();
         }
 
         function deleteNote(index) {
             notes.splice(index, 1);
+            localStorage.setItem('notes', JSON.stringify(notes));
             displayNotes();
         }
 
@@ -57,6 +74,9 @@
             }).join('');
             document.getElementById('notes').innerHTML = notesHtml;
         }
+
+        // Display the notes when the page loads
+        displayNotes();
     </script>
 </body>
 </html>
